@@ -13,12 +13,21 @@ const counterId = document.getElementById("counter");
 const emptyMsgId = document.getElementById("empty-msg");
 const clearDoneId = document.getElementById("clear-done");
 const charCountId = document.getElementById("char-count");
-
+const filterButtons = document.querySelectorAll(".filter-btn");
 
 function renderTasks() {
   taskListId.innerHTML = "";
 
   for(const task of tasks){
+
+      if(currentFilter === "active" && task.done === true){
+         continue;
+      }
+
+      if(currentFilter === "done" && task.done === false){
+         continue;
+      }
+
       const li = document.createElement("li");
       li.dataset.id = task.id;
 
@@ -159,6 +168,26 @@ clearDoneId.addEventListener("click", function(){
 taskInputId.addEventListener("input", function(){
    let count = taskInputId.value.length;
    charCountId.textContent = count + " / 50";
+});
+
+let currentFilter = "all";
+
+filterButtons.forEach(function(button) {
+
+   button.addEventListener("click", function() {
+
+      currentFilter = button.dataset.filter;
+
+      filterButtons.forEach(function(btn) {
+         btn.classList.remove("active");
+      });
+
+      button.classList.add("active");
+
+      renderTasks();
+
+   });
+
 });
 
 renderTasks();
